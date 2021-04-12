@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import M from 'materialize-css/dist/js/materialize.min.js';
+import { connect } from 'react-redux';
+import { addTech } from '../../actions/techActions';
+import PropTypes from 'prop-types';
 
-const AddTechModal = () => {
+const AddTechModal = ({ addTech }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
   const onSubmit = () => {
     if (firstName === '' || lastName === '') {
-      M.toast({ html: 'Please fill all the field' });
+      M.toast({ html: 'Please fill all the fields' });
     } else {
-      console.log(firstName, lastName);
+      const newTech = { firstName, lastName };
+      addTech(newTech);
+      M.toast({ html: `${firstName} ${lastName} added as tech` });
       setFirstName('');
       setLastName('');
     }
@@ -49,7 +54,7 @@ const AddTechModal = () => {
       <div className="modal-footer">
         <a
           href="#!"
-          onSubmit={onSubmit}
+          onClick={onSubmit}
           className="modal-close waves-effect blue waves-light btn"
         >
           Enter
@@ -64,4 +69,8 @@ const modalStyle = {
   height: '75%',
 };
 
-export default AddTechModal;
+AddTechModal.propTypes = {
+  addTech: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addTech })(AddTechModal);
